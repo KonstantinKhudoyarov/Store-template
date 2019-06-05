@@ -64,13 +64,9 @@ const Basket = (function (Storage) {
   const basketButtonAmount = document.querySelector('.button__items-amount');
   const basketProductWrapper = document.querySelector('.basket__products');
   const clearBasketButton = document.querySelector('.basket__btn .btn');
+  const mainBody = document.querySelector('.main');
 
   function openBasket() {
-    const deleteProductBtns = document.querySelectorAll('.basket__product-delete');
-
-    deleteProductBtns.forEach(function (btn) {
-      btn.addEventListener('click', deleteCurentProduct);
-    });
     basket.classList.toggle('basket_open');
   }
 
@@ -121,16 +117,18 @@ const Basket = (function (Storage) {
     });
   }
 
-  function deleteCurentProduct() {
-    const curentProduct = this.parentNode;
-    const nameOfProduct = this.previousElementSibling.firstElementChild.textContent;
+  function deleteCurentProduct(e) {
+    if (e.target.classList.contains('fa-trash-alt')) {
+      const curentProduct = e.target.parentNode.parentNode;
+      const nameOfProduct = e.target.parentNode.previousElementSibling.firstElementChild.textContent;
 
-    curentProduct.addEventListener('animationend', function () {
-      curentProduct.parentNode.removeChild(curentProduct);
-      setTotal();
-      Storage.updateLocalStorage(nameOfProduct);
-    });
-    curentProduct.classList.add('delete-product');
+      curentProduct.addEventListener('animationend', function () {
+        curentProduct.parentNode.removeChild(curentProduct);
+        setTotal();
+        Storage.updateLocalStorage(nameOfProduct);
+      });
+      curentProduct.classList.add('delete-product');
+    }
   }
 
   function createCardTemplate(cardSettings) {
@@ -168,6 +166,10 @@ const Basket = (function (Storage) {
 
   basketButton.addEventListener('click', openBasket);
   clearBasketButton.addEventListener('click', clearBasket);
+  // deleteProductBtns.forEach(function(btn) {
+  //     btn.addEventListener('click', deleteCurentProduct);
+  //   });
+  mainBody.addEventListener('click', deleteCurentProduct);
 
   return {
     basketButton: basketButton,
